@@ -1,27 +1,29 @@
-import {FlatList, Text, View, TouchableOpacity, TextInput} from 'react-native';
+import {Text, View, TouchableOpacity, TextInput} from 'react-native';
 import styled from 'styled-components';
 
 export const Container = styled(View)`
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: #ffffff;
+  background-color: #1bcc91;
 `;
 
 export const Header= styled(Text)`
   font-size: 25px;
-  color:#1bcc91;
+  color:#ffffff;
   font-weight: bold;
 `;
 export const TransportsView = styled(View)`
   width:350px;
   border-width: 1px;
-  background-color: #1bcc91;
+  background-color: #ffffff;
   align-self: center;
+  margin-top: 1%;
+  border-radius: 2px;
 `;
 export const ItemText = styled(Text)`
   font-size: 15px;
-  color:#ffffff;
+  color:#1bcc91;
   font-weight: bold;
 `;
 export const FlatListView = styled(View)`
@@ -30,7 +32,7 @@ export const FlatListView = styled(View)`
 
 export const FLHeader = styled(Text)`
   font-size: 20px;
-  color:#1bcc91;
+  color:#ffffff;
   font-weight: bold;
   margin-top: 5%;
   margin-bottom: 2%;
@@ -38,18 +40,20 @@ export const FLHeader = styled(Text)`
 
 export const SearchInput = styled(TextInput)`
   width: 350px;
-  color: #ffffff;
+  color: #1bcc91;
   padding: 5px;
   font-size: 15px;
   font-weight: bold;
-  background-color: #1bcc91;
+  background-color: #e0e0e0;
   border-radius: 5px;
+  border-color: #000000;
+  border-width: 1px;
   margin-bottom: 2%;
 `;
 
 export const ModalView = styled(View)`
-  height:50%;
-  width:90%;
+  height:60%;
+  width:90%; 
   border-width: 30px;
   border-radius: 30px;
   border-color:#000000;
@@ -77,7 +81,7 @@ export const ModalButtonsView = styled(View)`
 export const ModalConfirmButton = styled(TouchableOpacity)`
   background-color:#1bcc91;
   border-radius: 20px;
-  padding: 5px;
+  padding: 15px;
 `;
 
 export const ModalConfirmText = styled(Text)`
