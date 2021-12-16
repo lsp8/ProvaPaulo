@@ -4,29 +4,29 @@ import { Container, FlatListView, ItemText, TransportsView, Header, FLHeader, Se
 import api from '../../services/api';
 
 export default function HomeScreen() {
-  const [busState, setBusState] = useState<any>([]);     //definindo uma constante para os ônibus
-  const [lotState, setLotState] = useState<any>([]);   //definindo constante para as lotações
-  const [busChosen, setBusChosen] = useState<any>([]);   //definindo uma constante para o onibus selecionado
-  const [lotChosen, setLotChosen] = useState<any>([]);   //constante lotação selecionada
-  const [modalBus, setModalBus] = useState(false);      //modal para o usuário conferir se selecionou o transporte correto
+  const [busState, setBusState] = useState<any>([]);                 //definindo uma constante para os ônibus
+  const [lotState, setLotState] = useState<any>([]);                 //definindo constante para as lotações
+  const [busChosen, setBusChosen] = useState<any>([]);               //definindo uma constante para o onibus selecionado
+  const [lotChosen, setLotChosen] = useState<any>([]);               //constante lotação selecionada
+  const [modalBus, setModalBus] = useState(false);                   //modal para o usuário conferir se selecionou o transporte correto
   const [modalLot, setModalLot] = useState(false);
-  const [searchBusText, setSearchBusText] = useState('');       //constante para o filtro de busca
-  const [searchLotText, setSearchLotText] = useState('');
-  const [filteredBusList, setFilteredBusList] = useState<any>([]);
-  const [filteredLotList, setFilteredLotList] = useState<any>([]);
+  const [searchBusText, setSearchBusText] = useState('');            //constante para o filtro de busca
+  const [searchLotText, setSearchLotText] = useState('');            //^
+  const [filteredBusList, setFilteredBusList] = useState<any>([]);  //constante que será chamada no data da FlatList
+  const [filteredLotList, setFilteredLotList] = useState<any>([]);  //^ 
 
-  async function busRequest() {                          //função assíncrona para o método .get
+  async function busRequest() {          //função assíncrona para o método .get
     try {
       const response = await api.get('?a=nc&p=%&t=o');  //url reduzido pois o URLbase está setado lá no api.js da pasta services
-      // console.log(response.data);    //teste para checar o .get
+      // console.log(response.data);                    //teste para checar o .get
       setBusState(response.data);
-      //console.log(busState); //testando se o busState recebeu o response.data
+      //console.log(busState);                          //testando se o busState recebeu o response.data
     } catch (error) {
       console.error(error);
     }
   }
 
-  async function lotRequest() {                          //função semelhante à de cima ^
+  async function lotRequest() {                         
     try {
       const response = await api.get('?a=nc&p=%25&t=l');
       setLotState(response.data);
@@ -35,7 +35,15 @@ export default function HomeScreen() {
     }
   }
 
-  useEffect(() => {                //setando o busState como o filteredBusList
+  useEffect(() => {       //chamando a função assíncrona busRequest
+    busRequest()
+  }, [])
+
+  useEffect(() => {        
+    lotRequest()
+  }, [])
+
+  useEffect(() => {       //setando o busState como o filteredBusList
     setFilteredBusList(busState)
   },[busState])
 
@@ -43,13 +51,13 @@ export default function HomeScreen() {
     setFilteredLotList(lotState)
   },[lotState])
 
-  useEffect(() => {         //chamando o filtro
-    if (searchBusText !== '') {         //se o texto digitado for diferente de vazio,
+  useEffect(() => {                                               //chamando o filtro
+    if (searchBusText !== '') {                                   //se o texto digitado for diferente de vazio,
         const filteredArray = busState.filter((item: any) =>     //a constante irá filtrar o nome do item e setar como o novo texto digitado
-          item.nome.includes(searchBusText)
-        )
+          item.nome.includes(searchBusText)                      //utilizei o método 'includes' para renderizar todas as linhas que possuírem tais caracteres
+        )                                                     
         setFilteredBusList(filteredArray);
-    } else { setFilteredBusList(busState)}
+    } else { setFilteredBusList(busState)}                      //se o texto de busca estiver vazio, irei renderizar a lista completa
   }, [searchBusText])
 
   useEffect(() => {         
@@ -61,22 +69,14 @@ export default function HomeScreen() {
     } else { setFilteredLotList(lotState)}
   }, [searchLotText])
 
-  useEffect(() => {       //chamando a função assíncrona busRequest
-    busRequest()
-  }, [])
-
-  useEffect(() => {        //chamando a função lotRequest
-    lotRequest()
-  }, [])
-
   const busSelected = async (id: string) => {           //função chamada ao clicar em um ônibus da flatlist. ID como parâmetro único do item da flatlist
-    const response = await api.get(`?a=il&p=${id}`); //template string de URL reduzida + id passado como parâmetro. Daqui vem o itinerário
-    setBusChosen(response.data)       //setando o busChosen com a response
-    // console.log(response.data.idlinha, 'busSTATE'); //testando se o idlinha corresponde ao item clicado na flatlist
-    setModalBus(!modalBus)  //tornando o modal visível quando o usuário clicar
+    const response = await api.get(`?a=il&p=${id}`);    //template string de URL reduzida + id passado como parâmetro. Daqui vem o itinerário
+    setBusChosen(response.data)                         //setando o busChosen com a response
+    // console.log(response.data.idlinha, 'busSTATE');  //testando se o idlinha corresponde ao item clicado na flatlist
+    setModalBus(!modalBus)                              //tornando o modal visível quando o usuário clicar
   }
 
-  const lotSelected = async (id: string) => {    //funçao semelhante à de cima ^
+  const lotSelected = async (id: string) => {   
     const response = await api.get(`?a=il&p=${id}`);
     setLotChosen(response.data)
     setModalLot(!modalLot)
@@ -86,7 +86,7 @@ export default function HomeScreen() {
     console.log(busChosen, 'BUSCHOSEN')
   }, [busChosen])
 
-  useEffect(() => {                     // teste semelhante ao de cima ^
+  useEffect(() => {                   
     console.log(lotChosen, 'LOTCHOSEN')
   }, [lotChosen])
 
@@ -174,7 +174,7 @@ export default function HomeScreen() {
         </ModalView>
       </Modal>
 
-      <Modal              //modal para o usuário conferir se escolheu o transporte correto
+      <Modal              
         animationType="slide"
         visible={modalLot}
         transparent={true}
