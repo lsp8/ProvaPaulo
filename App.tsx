@@ -1,9 +1,9 @@
-
 import React from 'react';
-import {
-  SafeAreaView,
-} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import MainNav from './src/navigations/mainNav';
 import HomeScreen from './src/screens/Home';
 export default function App() {
-  return <HomeScreen />
-}
+  return (
+      <MainNav />
+  );
+};
