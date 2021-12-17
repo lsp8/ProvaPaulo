@@ -50,13 +50,17 @@ export const SearchInput = styled(TextInput)`
   border-width: 1px;
   margin-bottom: 2%;
 `;
-
+export const ModalContainer =styled(View)`
+  height: 100%;
+  width:100%;
+  display: flex;
+  background-color: rgba(0,0,0,0.6);
+`;
 export const ModalView = styled(View)`
-  height:60%;
-  width:90%; 
-  border-width: 30px;
+  width:90%;
+  border-width: 5px;
   border-radius: 30px;
-  border-color:#000000;
+  border-color:#787574;
   align-items: center;
   background-color: #ffffff;
   margin-top: 50%;
@@ -74,8 +78,10 @@ export const ModalText = styled(Text)`
 export const ModalButtonsView = styled(View)`
   flex-direction: row;
   justify-content: space-around;
+  align-items: center;
   width:90%;
   margin-top:20%;
+  margin-bottom: 5%;
 `;
 
 export const ModalConfirmButton = styled(TouchableOpacity)`

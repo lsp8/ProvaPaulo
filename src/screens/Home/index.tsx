@@ -1,19 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, TouchableOpacity, Modal, Linking } from 'react-native';
-import { Container, FlatListView, ItemText, TransportsView, Header, FLHeader, SearchInput, ModalView, ModalText, ModalButtonsView, ModalConfirmButton, ModalConfirmText, ModalCancelButton, ModalCancelText, ModalChosenView, ModalInfoText } from './styles';
+import {
+  Container,
+  FlatListView,
+  ItemText,
+  TransportsView,
+  Header,
+  FLHeader,
+  SearchInput,
+  ModalView,
+  ModalText,
+  ModalButtonsView,
+  ModalConfirmButton,
+  ModalConfirmText,
+  ModalCancelButton,
+  ModalCancelText,
+  ModalChosenView,
+  ModalInfoText,
+  ModalContainer
+} from './styles';
 import api from '../../services/api';
 
 export default function HomeScreen() {
   const [busState, setBusState] = useState<any>([]);                 //definindo uma constante para os ônibus
   const [lotState, setLotState] = useState<any>([]);                 //^ semelhante, porém para lotações
   const [busChosen, setBusChosen] = useState<any>([]);               //definindo uma constante para o ônibus selecionado
-  const [lotChosen, setLotChosen] = useState<any>([]);               
+  const [lotChosen, setLotChosen] = useState<any>([]);
   const [modalBus, setModalBus] = useState(false);                   //modal para o usuário conferir se selecionou o transporte correto
   const [modalLot, setModalLot] = useState(false);
   const [searchBusText, setSearchBusText] = useState('');            //constante para o filtro de busca
-  const [searchLotText, setSearchLotText] = useState('');            
+  const [searchLotText, setSearchLotText] = useState('');
   const [filteredBusList, setFilteredBusList] = useState<any>([]);  //constante que será chamada no data da FlatList
-  const [filteredLotList, setFilteredLotList] = useState<any>([]);  
+  const [filteredLotList, setFilteredLotList] = useState<any>([]);
 
   async function busRequest() {                         //função assíncrona para o método .get
     try {
@@ -26,7 +44,7 @@ export default function HomeScreen() {
     }
   }
 
-  async function lotRequest() {                         
+  async function lotRequest() {
     try {
       const response = await api.get('?a=nc&p=%25&t=l');
       setLotState(response.data);
@@ -39,48 +57,48 @@ export default function HomeScreen() {
     busRequest()
   }, [])
 
-  useEffect(() => {        
+  useEffect(() => {
     lotRequest()
   }, [])
 
   useEffect(() => {       //setando o busState como o filteredBusList
     setFilteredBusList(busState)
-  },[busState])
+  }, [busState])
 
-  useEffect(() => {                
+  useEffect(() => {
     setFilteredLotList(lotState)
-  },[lotState])
+  }, [lotState])
 
   useEffect(() => {                                               //chamando o filtro
     if (searchBusText !== '') {                                   //se o texto digitado for diferente de vazio,
-        const filteredArray = busState.filter((item: any) =>     //o método irá filtrar o nome do item e setar como o novo texto digitado
-          item.nome.includes(searchBusText)                      //utilizei o método 'includes' para renderizar todas as linhas que possuírem tais caracteres
-        )                                                     
-        setFilteredBusList(filteredArray);
-    } else { setFilteredBusList(busState)}                      //se o texto de busca estiver vazio, irei renderizar a lista completa
+      const filteredArray = busState.filter((item: any) =>     //o método irá filtrar o nome do item e setar como o novo texto digitado
+        item.nome.includes(searchBusText)                      //utilizei o método 'includes' para renderizar todas as linhas que possuírem tais caracteres
+      )
+      setFilteredBusList(filteredArray);
+    } else { setFilteredBusList(busState) }                      //se o texto de busca estiver vazio, irei renderizar a lista completa
   }, [searchBusText])
 
-  useEffect(() => {         
-    if (searchLotText !== '') {         
-        const filteredArray = lotState.filter((item: any) =>     
-          item.nome.includes(searchLotText)
-        )
-        setFilteredLotList(filteredArray);
-    } else { setFilteredLotList(lotState)}
+  useEffect(() => {
+    if (searchLotText !== '') {
+      const filteredArray = lotState.filter((item: any) =>
+        item.nome.includes(searchLotText)
+      )
+      setFilteredLotList(filteredArray);
+    } else { setFilteredLotList(lotState) }
   }, [searchLotText])
 
   const busSelected = async (id: string) => {           //função chamada ao clicar em um ônibus da flatlist. ID como parâmetro único do item da flatlist
     const response = await api.get(`?a=il&p=${id}`);    //template string de URL reduzida + id passado como parâmetro. Daqui vem o itinerário                          
     // console.log(response.data.idlinha, 'busSTATE');  //testando se o idlinha corresponde ao item clicado na flatlist 
     let itinArray: string[][] = []                      //variável com um array de coordenadas, que são também um array de lat e long.         
-    Object.values(response.data).map((item:any)=> {     //nesta função os itens são mapeados e, caso o tipo do item seja um objeto(como é o caso do array de
-      if(typeof item === 'object'){                     //coordenadas)o método push insere os valores das coordenadas na variável. 
-        itinArray.push([item?.lat,item?.lng])
-        }else{
-          console.log(item)
-        }
-    }) 
-    let busChosen ={                                    //aqui a variável de itinArray, uma string com 2 arrays, é passada à prop 'coordenadas'
+    Object.values(response.data).map((item: any) => {     //nesta função os itens são mapeados e, caso o tipo do item seja um objeto(como é o caso do array de
+      if (typeof item === 'object') {                     //coordenadas)o método push insere os valores das coordenadas na variável. 
+        itinArray.push([item?.lat, item?.lng])
+      } else {
+        console.log(item)
+      }
+    })
+    let busChosen = {                                    //aqui a variável de itinArray, uma string com 2 arrays, é passada à prop 'coordenadas'
       idlinha: response.data.idlinha,
       nome: response.data.nome,
       codigo: response.data.codigo,
@@ -94,14 +112,14 @@ export default function HomeScreen() {
   const lotSelected = async (id: string) => {           //acredito que esta função poderia ser omitida e eu poderia utilizar melhor a função acima.
     const response = await api.get(`?a=il&p=${id}`);    //Digo isto pois o .get é realizado no mesmo URL, e não encontrei até o momento nenhuma lotação
     let itinArray: string[][] = []                      //que tivesse o mesmo ID de um ônibus. Para evitar a possibilidade de duplicidade de ID,
-    Object.values(response.data).map((item:any)=> {     //resolvi manter esta função.
-      if(typeof item === 'object'){
-        itinArray.push([item?.lat,item?.lng])
-        }else{
-          console.log(item)
-        }
-    }) 
-    let lotChosen ={
+    Object.values(response.data).map((item: any) => {     //resolvi manter esta função.
+      if (typeof item === 'object') {
+        itinArray.push([item?.lat, item?.lng])
+      } else {
+        console.log(item)
+      }
+    })
+    let lotChosen = {
       idlinha: response.data.idlinha,
       nome: response.data.nome,
       codigo: response.data.codigo,
@@ -111,11 +129,11 @@ export default function HomeScreen() {
     setModalLot(!modalLot)
   }
 
-  useEffect(() => {                  
+  useEffect(() => {
     console.log(busChosen, 'BUSCHOSEN')  //testando se o busChosen recebeu o response.data a partir do setBusChosen na busSelected, com coordenadas, código, idlinha e nome
   }, [busChosen])
 
-  useEffect(() => {                   
+  useEffect(() => {
     console.log(lotChosen, 'LOTCHOSEN')
   }, [lotChosen])
 
@@ -130,7 +148,7 @@ export default function HomeScreen() {
     </TouchableOpacity>
   );
 
-  const renderLot = (lotState: any) => ( 
+  const renderLot = (lotState: any) => (
     <TouchableOpacity
       onPress={() => lotSelected(lotState.id)}
     >
@@ -165,7 +183,7 @@ export default function HomeScreen() {
         placeholderTextColor="#1bcc91"
         autoCapitalize="characters"
         value={searchLotText}
-        onChangeText={(t)=> setSearchLotText(t)}
+        onChangeText={(t) => setSearchLotText(t)}
       ></SearchInput>
       <FlatListView>
         <FlatList
@@ -180,61 +198,65 @@ export default function HomeScreen() {
         visible={modalBus}
         transparent={true}
       >
-        <ModalView style={{ elevation: 15 }}>
-          <ModalText>
-            Você selecionou o ônibus:
-          </ModalText>
-          <ModalChosenView>
-            <ModalInfoText>{busChosen.codigo}</ModalInfoText>
-            <ModalInfoText>{busChosen.nome}</ModalInfoText>
-          </ModalChosenView>
-          <ModalButtonsView>
-            <ModalCancelButton
-              onPress={() => setModalBus(!modalBus)}
-            >
-              <ModalCancelText>Cancelar</ModalCancelText>
-            </ModalCancelButton>
-            <ModalConfirmButton
-              onPress={() => {
-                setModalBus(!modalBus)
-                Linking.openURL(`geo:1,1?q=${busChosen.coordenadas[0][0]},${busChosen.coordenadas[0][1]}`) //indexação das coordenadas de Lat e Long
-              }}    //aqui, por motivos de performance, infelizmente não consegui utilizar o google.navigation(no lugar do 'geo').
-            >       
-              <ModalConfirmText> Confirmar </ModalConfirmText>
-            </ModalConfirmButton>
-          </ModalButtonsView>
-        </ModalView>
+        <ModalContainer>
+          <ModalView>
+            <ModalText>
+              Você selecionou o ônibus:
+            </ModalText>
+            <ModalChosenView>
+              <ModalInfoText>{busChosen.codigo}</ModalInfoText>
+              <ModalInfoText>{busChosen.nome}</ModalInfoText>
+            </ModalChosenView>
+            <ModalButtonsView>
+              <ModalCancelButton
+                onPress={() => setModalBus(!modalBus)}
+              >
+                <ModalCancelText>Cancelar</ModalCancelText>
+              </ModalCancelButton>
+              <ModalConfirmButton
+                onPress={() => {
+                  setModalBus(!modalBus)
+                  Linking.openURL(`google.navigation:q=${busChosen.coordenadas[0][0]},${busChosen.coordenadas[0][1]}`) //indexação das coordenadas de Lat e Long
+                }}    //aqui, por motivos de performance, geo:1,1? /google.navigation:
+              >
+                <ModalConfirmText> Confirmar </ModalConfirmText>
+              </ModalConfirmButton>
+            </ModalButtonsView>
+          </ModalView>
+        </ModalContainer>
       </Modal>
 
-      <Modal              
+      <Modal
         animationType="slide"
         visible={modalLot}
         transparent={true}
       >
-        <ModalView style={{ elevation: 15 }}>
-          <ModalText>
-            Você selecionou a loteação:
-          </ModalText>
-          <ModalChosenView>
-            <ModalInfoText>{lotChosen.codigo}</ModalInfoText>
-            <ModalInfoText>{lotChosen.nome}</ModalInfoText>
-          </ModalChosenView>
-          <ModalButtonsView>
-            <ModalCancelButton
-              onPress={() => setModalLot(!modalLot)}
-            >
-              <ModalCancelText>Cancelar</ModalCancelText>
-            </ModalCancelButton>
-            <ModalConfirmButton
-              onPress={() => {
-                setModalLot(!modalLot)
-                Linking.openURL(`geo:1,1?q=${lotChosen.coordenadas[0][0]},${lotChosen.coordenadas[0][1]}`)
-              }}
-            >
-              <ModalConfirmText> Confirmar </ModalConfirmText>
-            </ModalConfirmButton>
-          </ModalButtonsView>
-        </ModalView>
+        <ModalContainer>
+          <ModalView>
+            <ModalText>
+              Você selecionou a loteação:
+            </ModalText>
+            <ModalChosenView>
+              <ModalInfoText>{lotChosen.codigo}</ModalInfoText>
+              <ModalInfoText>{lotChosen.nome}</ModalInfoText>
+            </ModalChosenView>
+            <ModalButtonsView>
+              <ModalCancelButton
+                onPress={() => setModalLot(!modalLot)}
+              >
+                <ModalCancelText>Cancelar</ModalCancelText>
+              </ModalCancelButton>
+              <ModalConfirmButton
+                onPress={() => {
+                  setModalLot(!modalLot)
+                  Linking.openURL(`geo:1,1?q=${lotChosen.coordenadas[0][0]},${lotChosen.coordenadas[0][1]}`)
+                }}
+              >
+                <ModalConfirmText> Confirmar </ModalConfirmText>
+              </ModalConfirmButton>
+            </ModalButtonsView>
+          </ModalView>
+        </ModalContainer>
       </Modal>
     </Container>
   );

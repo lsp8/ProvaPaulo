@@ -34,7 +34,7 @@ export const Intro = styled(Text)`
 
 export const Button = styled(TouchableOpacity)`
     background-color: #ffffff;
-    margin-top: 20%;
+    margin-top: 15%;
     padding: 15px;
     border-radius: 35px;
     padding-left:20%;

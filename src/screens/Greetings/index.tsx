@@ -16,11 +16,12 @@ export default function GreetingsScreen() {
             </HeaderView>
             <Intro>
                 Este aplicativo foi desenvolvido entre os dias 14 e 17 de dezembro de 2021,
-                a partir de instruções passadas através de uma prova técnica.
-                Esta prova exige a consulta a uma API e a renderização de dados referentes a
+                a partir de instruções passadas em uma prova técnica.
+                Esta prova exige a consulta a uma API do dataPOA e a renderização de dados referentes a
                 ônibus e loteações. Na próxima página, você irá encontrar duas listas, com itens
-                clicáveis e com busca por nome implementada. Ao selecionar um item, um modal de
-                confirmação irá aparecer com o nome e código da linha. Para ser direcionado ao mapa,
+                clicáveis e com busca por nome implementada.Ambas as listas são roláveis. A busca foi implementada de modo a buscar 
+                por todos os itens que incluírem os caracteres digitados. Ao selecionar um item, um modal de
+                confirmação irá aparecer com o nome e código da linha. Para ser direcionado ao GoogleMaps,
                 confirme sua seleção.
                 Espero que goste!
                 Atenciosamente, Paulo.
