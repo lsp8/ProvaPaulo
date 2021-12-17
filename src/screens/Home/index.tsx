@@ -217,7 +217,7 @@ export default function HomeScreen() {
                 onPress={() => {
                   setModalBus(!modalBus)
                   Linking.openURL(`google.navigation:q=${busChosen.coordenadas[0][0]},${busChosen.coordenadas[0][1]}`) //indexação das coordenadas de Lat e Long
-                }}    //aqui, por motivos de performance, geo:1,1? /google.navigation:
+                }}    //aqui, por motivos de performance, é possível substituir o 'google.navigation:' por 'geo:1,1?', com prejuízo de renderização de rota. 
               >
                 <ModalConfirmText> Confirmar </ModalConfirmText>
               </ModalConfirmButton>
@@ -249,7 +249,7 @@ export default function HomeScreen() {
               <ModalConfirmButton
                 onPress={() => {
                   setModalLot(!modalLot)
-                  Linking.openURL(`geo:1,1?q=${lotChosen.coordenadas[0][0]},${lotChosen.coordenadas[0][1]}`)
+                  Linking.openURL(`google.navigation:q=${lotChosen.coordenadas[0][0]},${lotChosen.coordenadas[0][1]}`)
                 }}
               >
                 <ModalConfirmText> Confirmar </ModalConfirmText>
